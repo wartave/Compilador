@@ -68,7 +68,7 @@ if ($IDENTIFICADOR.text) not in self.variable_declaradas:
 }
                    | NUMERO_ENTERO
                    | NUMERO_FLOTANTE
-                   | BOOLEANO
+                   | booleano
                    | CADENA
                    | PARENTESIS_IZQ expresion_aditiva PARENTESIS_DER
                    | expresion_primaria IGUAL_IGUAL expresion_primaria
@@ -80,3 +80,5 @@ if ($IDENTIFICADOR.text) not in self.variable_declaradas:
                    | NOT expresion_primaria
                    | MENOS expresion_primaria
                    ;
+
+booleano : TRUE | FALSE;

@@ -188,5 +188,14 @@ class ParserVictorListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ParserVictor#booleano.
+    def enterBooleano(self, ctx:ParserVictor.BooleanoContext):
+        pass
+
+    # Exit a parse tree produced by ParserVictor#booleano.
+    def exitBooleano(self, ctx:ParserVictor.BooleanoContext):
+        pass
+
+
 
 del ParserVictor

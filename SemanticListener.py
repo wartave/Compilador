@@ -98,7 +98,9 @@ class SemanticListener(ParserVictorListener):
                         self.errores.append(f"Error semántico: No se puede concatenar un número con una cadena en la variable '{identificador}'.")
                         print(f"Error semántico: No se puede concatenar un número con una cadena en la variable '{identificador}'.")
                         break  # Terminar el bucle si se encuentra una cadena
-            else:
+            elif tipo_expresion == "BOOLEANO":
+                pass
+            else :
                 print(f"El tipo de la variable '{identificador}' no se pudo determinar.")
 
     def exitExpresion_primaria(self, ctx):
