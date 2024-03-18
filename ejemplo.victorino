@@ -1,0 +1,15 @@
+versa varibable=1;
+versa variable_cadena="cadena";
+versa variable_float=10.0;
+
+
+during(variable<0){
+    varibable = varibable+1;
+}
+
+WHEN(versa i=0;i<10;i++){
+    showText("la variable i tiene el valor: "+i);
+}
+variable_cadena=inputText("ingresa una frase");
+showText("la variable variable_cadena tiene el valor: "+variable_cadena);
+

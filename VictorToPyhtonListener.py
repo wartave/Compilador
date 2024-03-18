@@ -11,7 +11,6 @@ class VictorToPyhtonListener(ParseTreeListener):
         self.asignaciones_bloque = set()
 
     def is_inside_block(self, ctx):
-        # Verificar si el contexto actual es un hijo de un bloque
         current_ctx = ctx
         while current_ctx is not None:
             if isinstance(current_ctx, ParserVictor.BloqueContext):
@@ -40,7 +39,6 @@ class VictorToPyhtonListener(ParseTreeListener):
                 self.output += f"{identificador} = {valor};\n"
 
     def enterBloque(self, ctx:ParserVictor.BloqueContext):
-        # Recorrer las declaraciones dentro del bloque y realizar el reemplazo necesario
         
         for declaracion in ctx.declaraciones().declaracion():
             if isinstance(declaracion, ParserVictor.Declaracion_variableContext):
@@ -68,7 +66,6 @@ class VictorToPyhtonListener(ParseTreeListener):
         expresion = ctx.expresion().getText()
         self.output += f"print({expresion})\n"
             
-    # Enter a parse tree produced by ParserVictor#if_statement.
     def enterIf_statement(self, ctx:ParserVictor.If_statementContext):
         if self.is_inside_block(ctx):
             self.output += f"\t"
@@ -76,19 +73,16 @@ class VictorToPyhtonListener(ParseTreeListener):
         self.output += f"if { expresion}:\n \t"
 
 
-    # Exit a parse tree produced by ParserVictor#if_statement.
     def exitIf_statement(self, ctx:ParserVictor.If_statementContext):
         
         self.output += "\n"
 
-    # Enter a parse tree produced by ParserVictor#elseif_statement.
     def enterElseif_statement(self, ctx:ParserVictor.Elseif_statementContext):
         if self.is_inside_block(ctx):
             self.output += f"\t"
         expresion  = ctx.expresion().getText()
         self.output += f"elif { expresion}:\n \t"
 
-    # Exit a parse tree produced by ParserVictor#elseif_statement.
     def exitElseif_statement(self, ctx:ParserVictor.Elseif_statementContext):
         self.output += "\n"
 

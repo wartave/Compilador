@@ -23,8 +23,6 @@ def analizar():
     parser.addErrorListener(error_listener)
     tree = parser.programa()
 
-    # Obtener los tokens
-    # Mostrar los tokens en la tabla
     for token in tokens.tokens:
         tipo = parser.symbolicNames[token.type]
         valor = token.text
@@ -36,7 +34,9 @@ def analizar():
     walker.walk(semantico_listener, tree)
 
 
-    resultado_texto.delete("1.0", tk.END)
+    codigo_intermedio.delete("1.0", tk.END)
+    codigo_python.delete("1.0", tk.END)
+
     if error_listener.errors:
         for error in error_listener.errors:
             resultados_terminal.insert(tk.END, f"Error: {error}\n")
@@ -44,10 +44,10 @@ def analizar():
         for error in semantico_listener.errores:
             resultados_terminal.insert(tk.END, f"Error semántico: {error}\n")        
     else:
-        resultado_texto.insert(tk.END, tree.toStringTree(recog=parser) + '\n')
+        codigo_intermedio.insert(tk.END, tree.toStringTree(recog=parser) + '\n')
         js_listener = VictorToPyhtonListener()
         walker.walk(js_listener, tree)
-        codigo_intermedio.insert(tk.END, js_listener.output)      
+        codigo_python.insert(tk.END, js_listener.output)      
 
 class ErrorListener(ConsoleErrorListener):
     def __init__(self):
@@ -62,7 +62,7 @@ class ErrorListener(ConsoleErrorListener):
 
 
 ventana = tk.Tk()
-ventana.title("Analizador Léxico y Sintáctico de Victorino")
+ventana.title("Compilador Victor Taveras 1-17-1007")
 
 frame_entrada_tokens = tk.Frame(ventana)
 frame_entrada_tokens.pack(side="top", fill=tk.BOTH, expand=True)
@@ -110,12 +110,6 @@ etiqueta_token.pack(side="top")
 codigo_python = tk.Text(frame_codigo_python, height=20, width=40)
 codigo_python.pack(side="bottom", expand=True)
 
-resultados_label = tk.Label(ventana, text="Resultado:")
-resultados_label.pack()
-
-resultado_texto = tk.Text(ventana, height=10, width=40)
-resultado_texto.pack(side="top", fill=tk.BOTH, expand=True)
-
 
 
 
@@ -138,8 +132,7 @@ resultados_terminal.pack(side="bottom", fill="both")
 frame_buttons=tk.Frame(ventana)
 frame_bottom.pack(side="left", fill=tk.BOTH, expand=True)
 
-boton_analizar = tk.Button(ventana, text="Generar Codigo intermedio", command=analizar)
-boton_analizar.pack()
+
 
 
 def limpiar_tabla_tokens():
@@ -148,7 +141,6 @@ def limpiar_tabla_tokens():
         tabla_tokens.delete(row)
 
 def obtener_tokens(lexer):
-    # Obtener los tokens del flujo
     tokens = []
     while True:
         token = lexer.nextToken()
@@ -157,7 +149,6 @@ def obtener_tokens(lexer):
         tokens.append(token)
     return tokens
 def mostrar_tokens_en_tabla(tokens,lexer):
-    # Mostrar los tokens en la tabla
     for token in tokens:
         tipo = lexer.symbolicNames[token.type]
         valor = token.text

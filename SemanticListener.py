@@ -16,21 +16,19 @@ class SemanticListener(ParserVictorListener):
         except ValueError:
             return False
     def determinarTipo(self, expresion):
-        # Expresión regular para buscar elementos de la expresión
         patron = r'("[^"]+"|\d+|\w+)'
         elementos = re.findall(patron, expresion)
 
-        # Verificar el tipo de cada elemento
+        
         for elemento in elementos:
             try:
-                # Intentar convertir el elemento a entero
                 int(elemento)
                 return "NUMERO_ENTERO"
             except ValueError:
                 pass
 
             try:
-                # Intentar convertir el elemento a flotante
+                
                 float(elemento)
                 return "NUMERO_FLOTANTE"
             except ValueError:
@@ -38,11 +36,10 @@ class SemanticListener(ParserVictorListener):
             if expresion.lower() == "true" or expresion.lower() == "false":
                 return "BOOLEANO"    
             
-            # Si no se pudo convertir a número, entonces es una cadena
             if elemento.startswith('"') and elemento.endswith('"'):
                 return "CADENA"
 
-        # Si no se puede determinar el tipo, retornar None
+        
         return None
     
     def enterBloque(self, ctx):
@@ -77,27 +74,23 @@ class SemanticListener(ParserVictorListener):
             tipo_expresion = self.determinarTipo(expresion_asignada)
 
             if tipo_expresion == "CADENA":
-                # Dividir la expresión asignada en partes separadas por '+'
                 partes_expresion = expresion_asignada.split("+")
 
-                # Verificar si alguna parte después del primer '+' es un número entero
                 for parte in partes_expresion[1:]:
                     parte = parte.strip()  # Eliminar espacios en blanco
                     if parte.isnumeric():
                         self.errores.append(f"Error semántico: No se puede concatenar una cadena con un número entero en la variable '{identificador}'.")
                         print(f"Error semántico: No se puede concatenar una cadena con un número entero en la variable '{identificador}'.")
-                        break  # Terminar el bucle si se encuentra un número entero
+                        break  
             elif tipo_expresion in ["NUMERO_ENTERO", "NUMERO_FLOTANTE"]:
-                # Dividir la expresión asignada en partes separadas por '+'
                 partes_expresion = expresion_asignada.split("+")
 
-                # Verificar si alguna parte después del primer '+' es una cadena
                 for parte in partes_expresion[1:]:
                     parte = parte.strip()  # Eliminar espacios en blanco
                     if not (parte.isnumeric() or self.is_float(parte)):
                         self.errores.append(f"Error semántico: No se puede concatenar un número con una cadena en la variable '{identificador}'.")
                         print(f"Error semántico: No se puede concatenar un número con una cadena en la variable '{identificador}'.")
-                        break  # Terminar el bucle si se encuentra una cadena
+                        break  
             elif tipo_expresion == "BOOLEANO":
                 pass
             else :
