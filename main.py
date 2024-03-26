@@ -33,13 +33,13 @@ def analizar():
     walker = ParseTreeWalker()
     walker.walk(semantico_listener, tree)
 
-
+    resultados_terminal.delete("1.0", tk.END)
     codigo_intermedio.delete("1.0", tk.END)
     codigo_python.delete("1.0", tk.END)
 
     if error_listener.errors:
         for error in error_listener.errors:
-            resultados_terminal.insert(tk.END, f"Error: {error}\n")
+            resultados_terminal.insert(tk.END, f"Error sintactico: {error}\n")
     elif semantico_listener.errores:
         for error in semantico_listener.errores:
             resultados_terminal.insert(tk.END, f"Error semántico: {error}\n")        
@@ -57,8 +57,8 @@ class ErrorListener(ConsoleErrorListener):
         self.errors.append(f"Linea {line}:{column} {msg}")
 
 
-
-
+def compilar():
+    exec(codigo_python.get("1.0",tk.END))
 
 
 ventana = tk.Tk()
@@ -113,9 +113,10 @@ codigo_python.pack(side="bottom", expand=True)
 
 
 
-
 boton_analizar = tk.Button(ventana, text="Analizar", command=analizar)
 boton_analizar.pack()
+boton_compilar = tk.Button(ventana, text="Compilar", command=compilar)
+boton_compilar.pack()
 
 frame_bottom= tk.Frame(ventana)
 frame_bottom.pack(side="bottom", fill=tk.BOTH, expand=True)

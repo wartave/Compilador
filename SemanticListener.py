@@ -1,11 +1,13 @@
 #semantic SemanticListener
 import re
+from ParserVictor import ParserVictor
 from ParserVictorListener import ParserVictorListener
 
 
 class SemanticListener(ParserVictorListener):
     def __init__(self):
         self.variable_declaradas = set()
+        self.variable_declaradas_valor = {} 
         self.errores = []
         self.funciones_declaradas = set()
         self.pila_contextos = [set()]
@@ -42,6 +44,12 @@ class SemanticListener(ParserVictorListener):
         
         return None
     
+    def obtener_valor_variable(self, nombre_variable):
+        if nombre_variable in self.variable_declaradas_valor:
+            return self.variable_declaradas_valor[nombre_variable]
+        else:
+            return None  # Retornar None si la variable no ha sido declarada previamente
+
     def enterBloque(self, ctx):
         self.pila_contextos.append(set())
 
@@ -67,8 +75,10 @@ class SemanticListener(ParserVictorListener):
         else:
             self.pila_contextos[-1].add(identificador)
             self.variable_declaradas.add(identificador)
+           
             # Obtener la expresión asignada
             expresion_asignada = ctx.expresion().getText()
+            self.variable_declaradas_valor[identificador]=expresion_asignada
 
             # Determinar el tipo de la expresión
             tipo_expresion = self.determinarTipo(expresion_asignada)
@@ -123,3 +133,36 @@ class SemanticListener(ParserVictorListener):
 
     def exitDeclaracion_funcion(self, ctx):
         self.pila_contextos.pop()
+
+    def enterImprimir(self, ctx: ParserVictor.ImprimirContext):
+        expresion_asignada = ctx.expresion().getText()
+        print("enterImprimir expresion: "+expresion_asignada)
+
+        tipo_expresion = self.determinarTipo(expresion_asignada)
+
+        print("enterImprimir tipo_expresion: "+tipo_expresion)
+        if tipo_expresion == "CADENA":
+            partes_expresion = expresion_asignada.split("+")
+
+            for parte in partes_expresion[1:]:
+                parte = parte.strip()  # Eliminar espacios en blanco
+                valor=self.obtener_valor_variable(parte)
+                if parte.isnumeric():
+                    self.errores.append(f"Error semántico: No se puede concatenar una cadena con un número entero .")
+                    break
+                elif valor.isnumeric():
+                    self.errores.append(f"Error semántico: No se puede concatenar una cadena con un número entero .")
+                    break
+        elif tipo_expresion in ["NUMERO_ENTERO", "NUMERO_FLOTANTE"]:
+            partes_expresion = expresion_asignada.split("+")
+            for parte in partes_expresion[1:]:
+                parte = parte.strip()  # Eliminar espacios en blanco
+                if not (parte.isnumeric() or self.is_float(parte)):
+                    self.errores.append(f"Error semántico: No se puede concatenar un número con una cadena.")
+                    break
+        elif tipo_expresion == "BOOLEANO":
+            pass
+        
+
+  
+

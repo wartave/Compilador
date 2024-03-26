@@ -9,6 +9,11 @@ class VictorToPyhtonListener(ParseTreeListener):
         self.output = ""
         self.inside_function = False
         self.asignaciones_bloque = set()
+        self.indentation_level = 0  # Agregar una variable para el nivel de indentación
+
+    def generate_indentation(self):
+        # Método para generar la indentación adecuada según el nivel actual
+        return "\t" * self.indentation_level
 
     def is_inside_block(self, ctx):
         current_ctx = ctx
@@ -33,13 +38,23 @@ class VictorToPyhtonListener(ParseTreeListener):
         valor = ctx.expresion().getText()
         if self.is_inside_block(ctx):
             self.asignaciones_bloque.add(identificador)
+            self.output += f"\t{identificador} = {valor};\n"
         else:
             if identificador not in self.asignaciones_bloque:
                 print(  self.asignaciones_bloque);
                 self.output += f"{identificador} = {valor};\n"
 
+    def enterWhile_statement(self, ctx:ParserVictor.While_statementContext):
+        expresion = ctx.expresion().getText()
+        self.output += f"while({expresion}):"
+        self.output += "\n"
+
+    def exitWhile_statement(self, ctx:ParserVictor.While_statementContext):
+        pass
+
     def enterBloque(self, ctx:ParserVictor.BloqueContext):
-        
+        # Aumentar el nivel de indentación al entrar en un bloque
+        self.indentation_level += 1
         for declaracion in ctx.declaraciones().declaracion():
             if isinstance(declaracion, ParserVictor.Declaracion_variableContext):
                 identificador = declaracion.IDENTIFICADOR().getText()
@@ -51,6 +66,8 @@ class VictorToPyhtonListener(ParseTreeListener):
         
 
     def exitBloque(self, ctx:ParserVictor.BloqueContext): 
+        # Reducir el nivel de indentación al salir de un bloque
+        self.indentation_level -= 1
         self.output += "\n"   
 
     def enterDeclaracion_funcion(self, ctx:ParserVictor.Declaracion_funcionContext):
@@ -94,5 +111,8 @@ class VictorToPyhtonListener(ParseTreeListener):
     def exitDeclaracion_funcion(self, ctx:ParserVictor.Declaracion_funcionContext):
         self.inside_function = False
     
+
+
+
 
 
