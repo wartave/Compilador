@@ -106,6 +106,18 @@ class SemanticListener(ParserVictorListener):
             else :
                 print(f"El tipo de la variable '{identificador}' no se pudo determinar.")
 
+    #    Enter a parse tree produced by ParserVictor#capturar.
+    def enterCapturar(self, ctx:ParserVictor.CapturarContext):
+        if ctx.IDENTIFICADOR():
+            identificador = ctx.IDENTIFICADOR().getText()
+            if identificador not in self.variable_declaradas:
+                self.errores.append(f"Error semántico: La variable '{identificador}' no ha sido declarada previamente.")
+                print(f"Error semántico: La variable '{identificador}' no ha sido declarada previamente.")
+
+    # Exit a parse tree produced by ParserVictor#capturar.
+    def exitCapturar(self, ctx:ParserVictor.CapturarContext):
+        pass
+
     def exitExpresion_primaria(self, ctx):
         if ctx.IDENTIFICADOR():
             identificador = ctx.IDENTIFICADOR().getText()
@@ -134,35 +146,8 @@ class SemanticListener(ParserVictorListener):
     def exitDeclaracion_funcion(self, ctx):
         self.pila_contextos.pop()
 
-    def enterImprimir(self, ctx: ParserVictor.ImprimirContext):
-        expresion_asignada = ctx.expresion().getText()
-        print("enterImprimir expresion: "+expresion_asignada)
-
-        tipo_expresion = self.determinarTipo(expresion_asignada)
-
-        print("enterImprimir tipo_expresion: "+tipo_expresion)
-        if tipo_expresion == "CADENA":
-            partes_expresion = expresion_asignada.split("+")
-
-            for parte in partes_expresion[1:]:
-                parte = parte.strip()  # Eliminar espacios en blanco
-                valor=self.obtener_valor_variable(parte)
-                if parte.isnumeric():
-                    self.errores.append(f"Error semántico: No se puede concatenar una cadena con un número entero .")
-                    break
-                elif valor.isnumeric():
-                    self.errores.append(f"Error semántico: No se puede concatenar una cadena con un número entero .")
-                    break
-        elif tipo_expresion in ["NUMERO_ENTERO", "NUMERO_FLOTANTE"]:
-            partes_expresion = expresion_asignada.split("+")
-            for parte in partes_expresion[1:]:
-                parte = parte.strip()  # Eliminar espacios en blanco
-                if not (parte.isnumeric() or self.is_float(parte)):
-                    self.errores.append(f"Error semántico: No se puede concatenar un número con una cadena.")
-                    break
-        elif tipo_expresion == "BOOLEANO":
-            pass
+   
         
-
+    
   
 

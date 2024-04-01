@@ -62,6 +62,15 @@ class ParserVictorListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by ParserVictor#capturar.
+    def enterCapturar(self, ctx:ParserVictor.CapturarContext):
+        pass
+
+    # Exit a parse tree produced by ParserVictor#capturar.
+    def exitCapturar(self, ctx:ParserVictor.CapturarContext):
+        pass
+
+
     # Enter a parse tree produced by ParserVictor#parametros.
     def enterParametros(self, ctx:ParserVictor.ParametrosContext):
         pass
@@ -131,6 +140,15 @@ class ParserVictorListener(ParseTreeListener):
 
     # Exit a parse tree produced by ParserVictor#for_statement.
     def exitFor_statement(self, ctx:ParserVictor.For_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by ParserVictor#asignacion_expresion.
+    def enterAsignacion_expresion(self, ctx:ParserVictor.Asignacion_expresionContext):
+        pass
+
+    # Exit a parse tree produced by ParserVictor#asignacion_expresion.
+    def exitAsignacion_expresion(self, ctx:ParserVictor.Asignacion_expresionContext):
         pass
 
 

@@ -13,3 +13,36 @@ WHEN(versa i=0;i<10;i++){
 variable_cadena=inputText("ingresa una frase");
 showText("la variable variable_cadena tiene el valor: "+variable_cadena);
 
+
+
+//prueba de bucle for 'when'
+when(versa i=0; i<10; i=i+1;){
+	when(versa z=10; z>0; z=z-1;){
+		showText("vallor de i: "+i+" valor de z: "+z);
+	}
+}
+//prueba de variable while 'during'
+versa varibable=0;
+during(varibable!=10){
+    varibable = varibable+1;
+    showText("valor es: "+varibable);
+}
+
+//prueba de  entrada de texto
+versa variable=""; 
+inputText("ingresa tu nombre: ",variable);
+
+showText("tu nombre es: "+variable);
+
+
+//prueba menu de opciones
+versa opciones=0;
+
+showText("Menu Cafeteria \n");
+inputText("Ingrese una Opcion 1-platano, 2-yuca:",opciones);
+
+if(opciones=="1"){
+ showText("Ha seleccionado 1-platano\n");}
+elseif(opciones=="2"){
+showText("Ha seleccionado 2-yuca\n");
+}

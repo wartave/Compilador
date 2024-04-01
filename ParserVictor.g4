@@ -14,6 +14,7 @@ declaraciones : declaracion*;
 declaracion : declaracion_variable
             | declaracion_funcion
             | imprimir
+            | capturar
             | sentencia;
             
 
@@ -29,6 +30,7 @@ else:
 declaracion_funcion : WORK IDENTIFICADOR PARENTESIS_IZQ parametros? PARENTESIS_DER bloque;
 
 imprimir : SHOWTEXT PARENTESIS_IZQ expresion PARENTESIS_DER PUNTO_Y_COMA;
+capturar : INPUTTEXT PARENTESIS_IZQ CADENA COMA IDENTIFICADOR PARENTESIS_DER PUNTO_Y_COMA;
 
 parametros : parametro (COMA parametro)* | /* vacío */;
 parametro : IDENTIFICADOR;
@@ -50,7 +52,9 @@ elseif_statement : ELSEIF PARENTESIS_IZQ expresion PARENTESIS_DER bloque;
 
 while_statement : DURING PARENTESIS_IZQ expresion PARENTESIS_DER bloque;
 
-for_statement : WHEN PARENTESIS_IZQ expresion PARENTESIS_DER bloque;            
+for_statement : WHEN PARENTESIS_IZQ declaracion_variable expresion PUNTO_Y_COMA asignacion_expresion PARENTESIS_DER bloque;
+
+asignacion_expresion : asignacion | expresion;      
 
 asignacion : IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA;
 
@@ -75,6 +79,8 @@ if ($IDENTIFICADOR.text) not in self.variable_declaradas:
                    | expresion_primaria DIFERENTE_QUE expresion_primaria
                    | expresion_primaria MAYOR_IGUAL_QUE expresion_primaria
                    | expresion_primaria MENOR_IGUAL_QUE expresion_primaria
+                   | expresion_primaria MAYOR expresion_primaria
+                   | expresion_primaria MENOR expresion_primaria
                    | expresion_primaria OR expresion_primaria
                    | expresion_primaria AND expresion_primaria
                    | NOT expresion_primaria
